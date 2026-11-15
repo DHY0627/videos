@@ -4,6 +4,16 @@
 
 ---
 
+## 成片
+
+| 项 | 值 |
+| --- | --- |
+| 下载 | [Ep01_1080p60.mp4](https://github.com/DHY0627/videos/releases/download/ep01/Ep01_1080p60.mp4)（10.9 MB） |
+| 版本页 | [Releases · ep01](https://github.com/DHY0627/videos/releases/tag/ep01) |
+
+成片不进 Git 仓库：它是产物，不是源码，而且每次改一句台词都会让仓库膨胀十几 MB。
+本目录只放「能重建这条片子的代码」，素材与成片另行获取。
+
 ## 基本信息
 
 | 项目 | 值 |

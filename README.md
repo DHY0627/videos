@@ -1,6 +1,6 @@
 # 杂食鲸鱼 · 视频源码
 
-一个程序员频道里每一期视频的源码。**视频本身不放这里**，放 [Releases](../../releases)。
+一个程序员频道里每一期视频的源码。**视频本身不放这里**，放 [Releases](https://github.com/DHY0627/videos/releases)。
 
 这里放的是「能重建出那期视频的全部代码」：纯原生 HTML + CSS + JavaScript，
 没有框架、没有构建工具、没有 npm 依赖。双击 `index.html` 就能看。
@@ -11,7 +11,7 @@
 
 | 期号 | 标题 | 时长 | 源码 | 成片 |
 | --- | --- | --- | --- | --- |
-| Ep01 | 账号自我介绍 | 2:00 | [Ep01_杂食鲸鱼](Ep01_杂食鲸鱼/) | 见 Releases |
+| Ep01 | 账号自我介绍 | 2:00 | [Ep01_杂食鲸鱼](Ep01_杂食鲸鱼/) | [下载](https://github.com/DHY0627/videos/releases/download/ep01/Ep01_1080p60.mp4) |
 
 ---
 
@@ -86,4 +86,4 @@
 仓库里**不含**任何音频、字体、图片素材。每一期的 README 里列了它需要哪些文件、
 放了什么位置、各自是什么用途。想完整重建成片，需要自己准备对应的素材。
 
-成片视频在 [Releases](../../releases) 下载。
+成片视频在 [Releases](https://github.com/DHY0627/videos/releases) 下载。
