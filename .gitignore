@@ -1,0 +1,36 @@
+# 视频产物体积与版权说明
+# ---------------------------------------------------------------
+# 这个仓库只放「能重建视频的源码」。成片和所有音频素材都不进 Git：
+#   - 成片放 GitHub Releases（单个文件 10 MB 级别，不适合进仓库历史）
+#   - BGM / 音效 / 参考音色都是外部素材，版权状态与本仓库无关，不转载
+#   - 中间音轨（wav）体积极大，且可由源码 + 素材重新生成
+output/
+*.mp4
+*.mov
+*.mkv
+
+# 音频素材与中间产物
+resource/audio/**/*.wav
+resource/audio/**/*.mp3
+resource/audio/**/*.m4a
+resource/audio/**/*.flac
+voice_01.wav
+mix*.wav
+sfx_bed.wav
+
+# 字体与图片素材（如日后接入）
+assets/fonts/*.ttf
+assets/fonts/*.otf
+assets/img/*.psd
+
+# 工作区临时文件
+.tmp/
+*.log
+render*.log
+
+# 不上传的内容
+# ---------------------------------------------------------------
+# VIDEO_SPEC.md 是本地制作规范，内含本机绝对路径，不随仓库公开
+VIDEO_SPEC.md
+# FirstLook 是最早的废弃版本，内容已被 Ep01 取代，仅留作本地归档
+FirstLook/

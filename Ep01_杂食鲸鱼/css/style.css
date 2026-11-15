@@ -1,0 +1,530 @@
+/* ============================================================
+   杂食鲸鱼 · 第一期
+   画面规格：1920 × 1080 / 60 fps / devicePixelRatio = 1
+   安全区：上下 96 px，左右 120 px
+   背景：纯黑（用户指定，覆盖 VIDEO_SPEC 第 4 节默认要求）
+   动画：不使用任何 @keyframes / transition，全部由 js/scenes.js
+         在 requestAnimationFrame 中按时间逐帧写入行内 style
+   ============================================================ */
+
+:root {
+  --bg-0: #000000;
+  --bg-1: #0a0d12;
+  --bg-2: #141920;
+  --line: #242c38;
+  --text-1: #e8eaed;
+  --text-2: #a8b0bd;
+  --text-3: #6b7482;
+  --accent: #5b9dd9;
+  --accent-2: #d9a441;
+  --danger: #d96b6b;
+
+  --font-sans: "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei",
+    "Source Han Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--bg-0);
+  font-family: var(--font-sans);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- 背景层 ---------- */
+.bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  display: block;
+  z-index: 0;
+}
+
+/* ---------- 场景容器 ---------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  padding: 96px 120px;
+  opacity: 0;
+  z-index: 2;
+}
+
+/* ---------- 场景头 ---------- */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  line-height: 1;
+  margin-bottom: 64px;
+}
+
+.sec-idx {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.sec-name {
+  font-size: 30px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+}
+
+/* ============================================================
+   片头
+   ============================================================ */
+.scene-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.intro-kicker-line {
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  margin-bottom: 26px;
+}
+
+.intro-kicker {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  letter-spacing: 0.34em;
+  color: var(--accent);
+  display: flex;
+  align-items: baseline;
+  gap: 26px;
+}
+
+.intro-kicker-sub {
+  font-size: 22px;
+  letter-spacing: 0.22em;
+  color: var(--text-3);
+}
+
+.intro-title {
+  margin-top: 34px;
+  font-size: 96px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  display: flex;
+  text-indent: 0.1em;
+}
+
+.intro-title .ch {
+  display: inline-block;
+}
+
+.intro-sub {
+  margin-top: 40px;
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--text-2);
+  text-indent: 0.18em;
+}
+
+.intro-meta {
+  margin-top: 56px;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+}
+
+/* ============================================================
+   01 我是谁
+   ============================================================ */
+.who-group {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.who-row {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-bottom: 14px;
+}
+
+.who-row:last-child { margin-bottom: 0; }
+
+.who-mark {
+  display: block;
+  width: 3px;
+  height: 34px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex: 0 0 auto;
+  transform-origin: center center;
+}
+
+.who-text {
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  line-height: 1.32;
+}
+
+.who-final .who-text {
+  color: var(--accent-2);
+  font-weight: 500;
+}
+
+.who-final .who-mark {
+  background: var(--accent-2);
+}
+
+/* ============================================================
+   02 这个账号干什么
+   ============================================================ */
+.do-cards {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  top: 50%;
+  transform: translateY(-56%);
+  display: flex;
+  gap: 40px;
+}
+
+.do-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 46px 40px 40px;
+  height: 330px;
+  display: flex;
+  flex-direction: column;
+}
+
+.do-no {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.do-title {
+  margin-top: 22px;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-1);
+  line-height: 1.1;
+}
+
+.do-desc {
+  margin-top: 26px;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  line-height: 1.45;
+}
+
+.do-sub {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  line-height: 1.45;
+}
+
+.do-final {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  bottom: 250px;
+  text-align: center;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--accent-2);
+  opacity: 0;
+}
+
+/* ============================================================
+   03 这个账号不干什么
+   ============================================================ */
+.dont-grid {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  top: 50%;
+  transform: translateY(-54%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 44px 40px;
+}
+
+.dont-item {
+  border-left: 3px solid var(--danger);
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dont-text {
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-1);
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dont-x {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.dont-x::before,
+.dont-x::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 22px;
+  height: 2px;
+  background: var(--danger);
+  opacity: 0.85;
+}
+
+.dont-x::before { transform: rotate(45deg); }
+.dont-x::after { transform: rotate(-45deg); }
+
+.dont-note {
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  line-height: 1.4;
+}
+
+.dont-final {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  bottom: 240px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  opacity: 0;
+}
+
+/* ============================================================
+   04 一期视频是怎么来的
+   ============================================================ */
+.how-flow {
+  position: absolute;
+  left: 260px;
+  right: 260px;
+  top: 32%;
+  height: 120px;
+}
+
+.how-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 1px;
+  background: var(--line);
+}
+
+.how-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.how-steps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.how-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.how-dot {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-0);
+  margin-top: 8px;
+}
+
+.how-label {
+  font-size: 32px;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+.how-lines {
+  position: absolute;
+  left: 260px;
+  right: 260px;
+  top: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.how-line {
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  text-align: center;
+  opacity: 0;
+}
+
+.how-line-strong {
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--accent-2);
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   05 欢迎来观看
+   ============================================================ */
+.welcome-wrap {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-cond,
+.welcome-tail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.welcome-line {
+  font-size: 34px;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+  opacity: 0;
+}
+
+.welcome-main {
+  margin: 74px 0;
+  font-size: 96px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--text-1);
+  text-indent: 0.16em;
+  line-height: 1.1;
+  opacity: 0;
+}
+
+.welcome-tail .welcome-line {
+  color: var(--text-3);
+  font-size: 32px;
+}
+
+/* ============================================================
+   公用结尾容器（内部样式由 resource/outro/outro.js 注入）
+   ============================================================ */
+.scene-outro { padding: 0; }
+
+/* ============================================================
+   字幕
+   ============================================================ */
+.subtitle-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.subtitle {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  max-width: 80%;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  color: var(--text-1);
+  text-align: center;
+  background: rgba(11, 14, 19, 0.72);
+  border-radius: 8px;
+  padding: 12px 24px;
+  opacity: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ============================================================
+   全局进度条
+   ============================================================ */
+.global-bar {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  bottom: 30px;
+  height: 1px;
+  background: rgba(42, 50, 63, 0.7);
+  z-index: 21;
+}
+
+.global-bar i {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}

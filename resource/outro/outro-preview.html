@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-cf-duration="9">
+<head>
+<meta charset="UTF-8">
+<title>杂食鲸鱼 · 公用结尾动画</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #stage { position: relative; width: 1920px; height: 1080px; background: #000; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="outro.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var DURATION = window.OUTRO.duration;
+  var FPS = 60;
+  var stage = document.getElementById('stage');
+  var inst = window.OUTRO.mount(stage);
+
+  var running = false;
+  var anchor = 0;
+  var lastSeek = 0;
+  var loopPlayback = true;
+  var embedded = (typeof window.__cf !== 'undefined');
+
+  function renderAt(t) {
+    t = Math.max(0, Math.min(DURATION, t));
+    window.OUTRO.render(inst, t, 0, DURATION);
+  }
+
+  function seek(t) {
+    t = Math.max(0, Math.min(DURATION, t));
+    lastSeek = t;
+    renderAt(t);
+    if (running) anchor = performance.now() - t * 1000;
+  }
+
+  function play(from) {
+    var start = (from === undefined) ? lastSeek : Math.max(0, Math.min(DURATION, from));
+    anchor = performance.now() - start * 1000;
+    if (start >= DURATION) anchor = performance.now();
+    running = true;
+  }
+
+  function pause() {
+    lastSeek = Math.max(0, Math.min(DURATION, (performance.now() - anchor) / 1000));
+    running = false;
+    renderAt(lastSeek);
+  }
+
+  function loop() {
+    if (!running) {
+      renderAt(lastSeek);
+      requestAnimationFrame(loop);
+      return;
+    }
+    var t = (performance.now() - anchor) / 1000;
+    if (t >= DURATION) {
+      if (loopPlayback && !embedded) {
+        t = 0;
+        anchor = performance.now();
+      } else {
+        t = DURATION;
+        running = false;
+        lastSeek = DURATION;
+      }
+    }
+    renderAt(t);
+    requestAnimationFrame(loop);
+  }
+
+  window.VIDEO = {
+    duration: DURATION,
+    fps: FPS,
+    totalFrames: Math.round(DURATION * FPS),
+    ready: Promise.resolve(true),
+    seek: seek,
+    play: play,
+    pause: pause,
+    restart: function () { seek(0); play(0); },
+    isPlaying: function () { return running; }
+  };
+
+  renderAt(0);
+
+  if (embedded) {
+    requestAnimationFrame(loop);
+  } else {
+    var q = location.search || '';
+    var m = /[?&]t=([\d.]+)/.exec(q);
+    var startAt = m ? parseFloat(m[1]) : 0;
+    if (/[?&]once=1/.test(q)) loopPlayback = false;
+    play(startAt);
+    requestAnimationFrame(loop);
+  }
+
+  document.fonts.ready.then(function () { renderAt(lastSeek); });
+})();
+</script>
+</body>
+</html>
